@@ -1,0 +1,8 @@
+# FlowProof has ZERO runtime dependencies — it uses only the Python 3.8+ standard
+# library (json, re, hashlib, copy, datetime, argparse).
+#
+# Nothing to install. To run:
+#     python flowproof_cli.py selftest
+#
+# This file is intentionally empty of packages so `pip install -r requirements.txt`
+# is a safe no-op on a buyer's machine.

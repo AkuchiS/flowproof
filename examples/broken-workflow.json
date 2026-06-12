@@ -1,0 +1,67 @@
+{
+  "name": "AI Blog-to-Social Repurposer",
+  "active": true,
+  "versionId": "9d1f2a44-3c7e-4b21-8f0a-7e6d5c4b3a21",
+  "meta": { "instanceId": "src-instance-001" },
+  "nodes": [
+    {
+      "name": "Every Morning",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "parameters": { "triggerTimes": { "item": [{ "mode": "everyDay", "hour": 8 }] } }
+    },
+    {
+      "name": "Get Latest Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "parameters": {
+        "url": "https://example.com/wp-json/wp/v2/posts?per_page=1",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [{ "name": "x-api-key", "value": "sk-live-3f9a7c2e8b1d6049f5a2c7e1" }]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "12",
+          "name": "Blog API Key",
+          "data": { "name": "x-api-key", "value": "raw-secret-should-not-ship" }
+        }
+      }
+    },
+    {
+      "name": "Summarize",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.8,
+      "position": [720, 300],
+      "parameters": { "resource": "text", "prompt": "Summarize into 3 tweets:" },
+      "credentials": { "openAiApi": { "id": "5", "name": "OpenAI account" } }
+    },
+    {
+      "name": "Format",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [960, 300],
+      "parameters": { "functionCode": "return items.map(i => ({ json: { text: i.json.summary } }));" }
+    },
+    {
+      "name": "Post to Discord",
+      "type": "n8n-nodes-discord.discord",
+      "typeVersion": 1,
+      "position": [1200, 300],
+      "parameters": { "channelId": "123", "text": "={{ $json.text }}" }
+    }
+  ],
+  "connections": {
+    "Every Morning": { "main": [[{ "node": "Get Latest Post", "type": "main", "index": 0 }]] },
+    "Get Latest Post": { "main": [[{ "node": "Summarize", "type": "main", "index": 0 }]] },
+    "Summarize": { "main": [[{ "node": "Format", "type": "main", "index": 0 }]] },
+    "Format": { "main": [[{ "node": "Send Tweet", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {
+    "Get Latest Post": [{ "json": { "title": "Sample", "content": "internal draft, do not ship" } }]
+  },
+  "settings": {}
+}
