@@ -1,5 +1,9 @@
 # FlowProof
 
+[![License](https://img.shields.io/github/license/AkuchiS/flowproof?color=8A2BE2)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/AkuchiS/flowproof?color=8A2BE2)](https://github.com/AkuchiS/flowproof/commits)
+[![Stars](https://img.shields.io/github/stars/AkuchiS/flowproof?color=8A2BE2)](https://github.com/AkuchiS/flowproof/stargazers)
+
 **Check n8n workflow exports import cleanly — before you buy, sell or ship them.**
 
 Free, offline CLI. No API keys. Nothing leaves your machine.
