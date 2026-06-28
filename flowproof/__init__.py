@@ -8,7 +8,7 @@ from __future__ import annotations
 from .diagnostics import diagnose
 from .loader import load_file, load_text, extract_workflows, sha256_of, WorkflowLoadError
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __all__ = [
     "diagnose",
     "load_file", "load_text", "extract_workflows", "sha256_of",

@@ -42,6 +42,23 @@ def _load(arg):
 
 SEV_ICON = {"critical": "✖", "high": "✖", "med": "▲", "low": "·", "info": "·"}
 
+PRO_URL = "https://fp.akuchis.com"
+
+
+def _pro_nudge(has_problems):
+    """A short, contextual FlowProof Pro upsell, printed once after the human
+    report. Never shown in --json mode or selftest, so machine output stays clean."""
+    if has_problems:
+        print(
+            f"\n  ⚡ Don't fix these by hand — FlowProof Pro repairs the workflow into an"
+            f"\n     import-ready file and hands you a content-hashed “FlowProof Checked”"
+            f"\n     certificate + client handover.  →  {PRO_URL}")
+    else:
+        print(
+            f"\n  ✓ Clean import. Selling or shipping this to a client? FlowProof Pro adds"
+            f"\n     a “FlowProof Checked” certificate + handover so they trust it on sight."
+            f"\n     →  {PRO_URL}")
+
 
 def _print_report(rep, name):
     verdict = "IMPORTABLE" if rep["importable"] else "NOT IMPORTABLE"
@@ -75,6 +92,8 @@ def cmd_check(args):
         worst = max(worst, 2 if not rep["importable"] else 0)
     if args.json:
         print(json.dumps(out if len(out) > 1 else out[0], indent=2))
+    else:
+        _pro_nudge(any((not r["importable"]) or r["blocker_count"] for r in out))
     return worst
 
 
@@ -97,6 +116,8 @@ def cmd_verify(args):
             worst = 2
     if args.json:
         print(json.dumps(out if len(out) > 1 else out[0], indent=2))
+    else:
+        _pro_nudge(any((not v["importable"]) or v["blockers"] for v in out))
     return worst
 
 
